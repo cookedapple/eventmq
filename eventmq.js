@@ -11,7 +11,7 @@
   Db = mongo.Db;
   var db;
 
-var generate_mongo_url = function(obj){
+  var generate_mongo_url = function(obj){
   obj.hostname = (obj.mongohost || 'ds037637.mongolab.com');
   obj.port = (obj.mongoport || 37637);
   obj.db = (obj.mongodb || 'evetmq');
