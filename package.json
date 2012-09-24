@@ -1,0 +1,32 @@
+{
+  "name": "eventmq",
+  "description": "A pixel based event tracker by Svapna S.r.l.",
+  "keywords": [
+    "javascript",
+    "server",
+    "tracking",
+    "svapna",
+    "pixel",
+    "event"
+  ],
+  "author": {
+    "name": "Azhar Khan"
+  },
+  "version": "0.1.0",
+  "licenses": [
+    {
+    }
+  ],
+  "engines": {
+    "node": "0.8.x",
+    "npm": "1.1.x"
+  },
+  "dependencies": {
+	"mongodb": ">= 0.9.6-7",
+	"connect": "1.8.5"
+   },
+  "repository": {
+    "type": "git",
+    "url": "git@heroku.com:eventmq.git"
+  }
+}

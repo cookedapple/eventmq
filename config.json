@@ -1,0 +1,10 @@
+{
+  "port":     "57367",
+  "host":     "0.0.0.0",
+  "interval": 10,
+   "mongohost": "ds037637.mongolab.com",
+   "mongoport": 37637,
+   "mongodb": "eventmq",
+   "mongouser": "eventmq",
+   "mongopwd": "eVentmQ"
+}
