@@ -1,0 +1,1 @@
+web: node eventmq.js config.json
