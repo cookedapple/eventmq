@@ -7,11 +7,12 @@
   querystring = require('querystring');
   var connect = require('connect');
   mongo = require('mongodb');
+  cmnfs = require('./functions.js')
   Server = mongo.Server,
   Db = mongo.Db;
   var db;
 
-  var generate_mongo_url = function(obj){
+var generate_mongo_url = function(obj){
   obj.hostname = (obj.mongohost || 'ds037637.mongolab.com');
   obj.port = (obj.mongoport || 37637);
   obj.db = (obj.mongodb || 'evetmq');
@@ -77,7 +78,7 @@
 	  db.collection('eventhits',function (err,collection) {
 		  collection.insert({
 			  "host": "localhost",
-			  "key": hash[i].key,
+			  "key": cmnfs.toBase64ToStr(hash[i].key),
 			  "hits": hits
 		  }, {safe:true}, function(err, result) {
 				  if(err) {
@@ -197,7 +198,6 @@ console.log("Connecting to  db '" + config.mongodb + "'");
 
 mongo.connect(mongourl, {}, function(error, db1) {
 	console.log("Connected to '" + config.mongodb + "' database... ");
-
 	db = db1;
 
 	db.addListener("error", function(error) {
@@ -205,5 +205,10 @@ mongo.connect(mongourl, {}, function(error, db1) {
 	});
 });
 
+/*
+	var base64 = cmnfs.toStrToBase64("Hello World");
+	console.log(base64);
+	console.log(cmnfs.toBase64ToStr(base64));
+*/
 
 })();
