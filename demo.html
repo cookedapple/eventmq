@@ -1,0 +1,131 @@
+<html>
+	<head>
+		<title>Eventmq Base64 To JSON Demo</title>
+		<style>
+			body{font-family: "Arial";}
+		</style>
+		<script>
+			// Q2hlY2sgaWYgdGhpcyBpcyBvaw==
+			// http://www.motobit.com/util/base64-decoder-encoder.asp - Base64 converter
+			// http://decodebase64.com/
+			function updateImage() {
+				var base64Str = document.getElementById("txtBase").value;
+				document.getElementById("imgPixel").src = 'http://localhost:57367/pixel.gif?key='+base64Str;
+				document.getElementById("decodedDiv").innerHTML = decode64(base64Str);
+			}
+
+			var keyStr = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";
+
+			function encode64(input) {
+				input = escape(input);
+				var output = "";
+				var chr1, chr2, chr3 = "";
+				var enc1, enc2, enc3, enc4 = "";
+				var i = 0;
+
+				do {
+					chr1 = input.charCodeAt(i++);
+					chr2 = input.charCodeAt(i++);
+					chr3 = input.charCodeAt(i++);
+
+					enc1 = chr1 >> 2;
+					enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+					enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+					enc4 = chr3 & 63;
+
+					if (isNaN(chr2)) {
+					   enc3 = enc4 = 64;
+					} else if (isNaN(chr3)) {
+					   enc4 = 64;
+					}
+
+					output = output +
+					   keyStr.charAt(enc1) +
+					   keyStr.charAt(enc2) +
+					   keyStr.charAt(enc3) +
+					   keyStr.charAt(enc4);
+					chr1 = chr2 = chr3 = "";
+					enc1 = enc2 = enc3 = enc4 = "";
+				 } while (i < input.length);
+
+				 return output;
+			  }
+
+			  function decode64(input) {
+				 var output = "";
+				 var chr1, chr2, chr3 = "";
+				 var enc1, enc2, enc3, enc4 = "";
+				 var i = 0;
+
+				 // remove all characters that are not A-Z, a-z, 0-9, +, /, or =
+				 var base64test = /[^A-Za-z0-9\+\/\=]/g;
+				 if (base64test.exec(input)) {
+					alert("There were invalid base64 characters in the input text.\n" +
+						  "Valid base64 characters are A-Z, a-z, 0-9, '+', '/',and '='\n" +
+						  "Expect errors in decoding.");
+				 }
+				 input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
+
+				 do {
+					enc1 = keyStr.indexOf(input.charAt(i++));
+					enc2 = keyStr.indexOf(input.charAt(i++));
+					enc3 = keyStr.indexOf(input.charAt(i++));
+					enc4 = keyStr.indexOf(input.charAt(i++));
+
+					chr1 = (enc1 << 2) | (enc2 >> 4);
+					chr2 = ((enc2 & 15) << 4) | (enc3 >> 2);
+					chr3 = ((enc3 & 3) << 6) | enc4;
+
+					output = output + String.fromCharCode(chr1);
+
+					if (enc3 != 64) {
+					   output = output + String.fromCharCode(chr2);
+					}
+					if (enc4 != 64) {
+					   output = output + String.fromCharCode(chr3);
+					}
+
+					chr1 = chr2 = chr3 = "";
+					enc1 = enc2 = enc3 = enc4 = "";
+
+				 } while (i < input.length);
+
+				 return unescape(output);
+			  }
+
+		</script>
+	</head>
+	<body>
+		<center>
+			<h1>Eventmq Base64 To JSON Demo</h1>
+		</center>
+		<br/>
+		<br/>
+		<table cellpadding="1" cellspacing="1" border="0" width="100%">
+			<tr>
+				<td width="49%">
+					<span style="font-size: 12px;'">Enter Base64 string here to convert into JSON and save to mongodb</span>
+				</td>
+				<td width="2%">&nbsp;</td>
+				<td align="left"  width="49%">
+					<span style="font-size: 12px;'"><strong>Decoded JSON</strong></span>
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<textarea id="txtBase" style="height: 200px; width: 90%;"></textarea>
+				</td>
+				<td>&nbsp;</td>
+				<td style="vertical-align: top;">
+					<div id="decodedDiv"></div>
+				</td>
+			</tr>
+			<tr>
+				<td colspan="3">
+					<input type="button" value="Click to convert to JSON and save to DB" onclick="updateImage();" />
+				</td>
+			</tr>
+		<br/>
+		<img id="imgPixel" src="http://localhost:57367/pixel.gif" />
+	</body>
+</html>
