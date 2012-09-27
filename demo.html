@@ -10,7 +10,8 @@
 			// http://decodebase64.com/
 			function updateImage() {
 				var base64Str = document.getElementById("txtBase").value;
-				document.getElementById("imgPixel").src = 'http://localhost:57367/pixel.gif?key='+base64Str;
+//				document.getElementById("imgPixel").src = 'http://localhost:57367/pixel.gif?key='+base64Str;
+				document.getElementById("imgPixel").src = 'http://eventmq.herokuapp.com/pixel.gif?key='+base64Str;
 				document.getElementById("decodedDiv").innerHTML = decode64(base64Str);
 			}
 
@@ -126,6 +127,6 @@
 				</td>
 			</tr>
 		<br/>
-		<img id="imgPixel" src="http://localhost:57367/pixel.gif" />
+		<img id="imgPixel" src="http://eventmq.herokuapp.com/pixel.gif" />
 	</body>
 </html>
