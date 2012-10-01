@@ -37,7 +37,8 @@ var generate_mongo_url = function(obj){
     }
 
 //	store[key] || (store[key] = 1);
-	console.info(JSON.stringify(store));
+//console.info(keyname);
+//	console.info(JSON.stringify(store));
     return store.push({key: keyname});
   };
   serialize = function() {
@@ -76,23 +77,32 @@ var generate_mongo_url = function(obj){
 		 hits = 1;
       _a.push(console.info("" + (hits) + ":\t" + (hash[i].key)));
 	  db.collection('eventhits',function (err,collection) {
-		  collection.insert({
-			  "host": "localhost",
-			  "key": cmnfs.toBase64ToStr(hash[i].key),
-			  "hits": hits
-		  }, {safe:true}, function(err, result) {
-				  if(err) {
-					console.info("Error while adding record to db, reason:" + err);
-				  } else {
-					  console.info("Record added to db");
-				  }
-			});
+		  //console.info(cmnfs.toDecode64(hash[i].key));
+				  collection.insert({
+					  "host": "localhost",
+					  "key": cmnfs.toDecode64(hash[i].key),
+					  "hits": hits
+				  }, {safe:true}, function(err, result) {
+						  if(err) {
+							console.info("Error while adding record to db, reason:" + err);
+						  } else {
+							  console.info("Record added to db");
+						  }
+				}); // end insert
 	  });
     }    return _a;
   };
   server = http.createServer(function(req, res) {
     var params;
-    params = url.parse(req.url, true);
+	var requrl = req.url;
+//	console.info(requrl);
+	if(requrl.indexOf('+') != -1) {
+		requrl = cmnfs.encodeUrl('+','%2B',requrl);
+		//requrl = cmnfs.encodeUrl(requrl);
+	}
+	//console.info(requrl);
+    params = url.parse(requrl, true);
+	//console.info(params);
     if (params.pathname === '/pixel.gif') {
       res.writeHead(200, pixelHeaders);
       res.end(pixel);
@@ -113,7 +123,8 @@ var generate_mongo_url = function(obj){
     process.exit(0);
   }
   config = JSON.parse(fs.readFileSync(configPath).toString());
-  pixel = fs.readFileSync('pixel.gif');
+//  pixel = fs.readFileSync('pixel.gif');
+  pixel = "R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
   pixelHeaders = {
     'Cache-Control': 'private, no-cache, proxy-revalidate',
     'Content-Type': 'image/gif',
