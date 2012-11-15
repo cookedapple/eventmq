@@ -50,6 +50,7 @@ var generate_mongo_url = function(obj){
     if (config.secret) {
       data.secret = config.secret;
     }
+    data.website = config.website || 'localhost'; 
     return querystring.stringify(data);
   };
   flush = function() {
