@@ -25,9 +25,6 @@ var generate_mongo_url = function(obj){
   }
 }
 
-
-
-
   VERSION = '0.1.0';
   store = [];
   record = function(params) {
@@ -35,10 +32,9 @@ var generate_mongo_url = function(obj){
     if (!(keyname = params.query == null ? undefined : params.query.key)) {
       return null;
     }
-
-//	store[key] || (store[key] = 1);
-//console.info(keyname);
-//	console.info(JSON.stringify(store));
+    //	store[key] || (store[key] = 1);
+    //console.info(keyname);
+    //	console.info(JSON.stringify(store));
     return store.push({key: keyname});
   };
   serialize = function() {
@@ -72,15 +68,16 @@ var generate_mongo_url = function(obj){
     var _a, _b, hits, key;
     _a = []; _b = hash;
     for (i =0; i < hash.length; i++) {
-//      if (!__hasProp.call(_b, key)) continue;
-//      hits = _b[key];
-		 hits = 1;
+      //      if (!__hasProp.call(_b, key)) continue;
+      //      hits = _b[key];
+		  hits = 1;
       _a.push(console.info("" + (hits) + ":\t" + (hash[i].key)));
-	  db.collection('eventhits',function (err,collection) {
-		  //console.info(cmnfs.toDecode64(hash[i].key));
+	    db.collection('eventhits',function (err,collection) {
+		  //console.info(new Buffer(hash[i].key, 'base64').toString('utf8'));
+      //console.info(cmnfs.toDecode64(hash[i].key));
 				  collection.insert({
 					  "host": "localhost",
-					  "key": cmnfs.toDecode64(hash[i].key),
+					  "key": JSON.parse(cmnfs.toDecode64(hash[i].key)),
 					  "hits": hits
 				  }, {safe:true}, function(err, result) {
 						  if(err) {
@@ -92,14 +89,15 @@ var generate_mongo_url = function(obj){
 	  });
     }    return _a;
   };
+
   server = http.createServer(function(req, res) {
     var params;
-	var requrl = req.url;
-//	console.info(requrl);
-	if(requrl.indexOf('+') != -1) {
-		requrl = cmnfs.encodeUrl('+','%2B',requrl);
-		//requrl = cmnfs.encodeUrl(requrl);
-	}
+	  var requrl = req.url;
+    //	console.info(requrl);
+  	if(requrl.indexOf('+') != -1) {
+  		requrl = cmnfs.encodeUrl('+','%2B',requrl);
+  		//requrl = cmnfs.encodeUrl(requrl);
+  	}
 	//console.info(requrl);
     params = url.parse(requrl, true);
 	//console.info(params);
@@ -113,6 +111,7 @@ var generate_mongo_url = function(obj){
     }
     return null;
   });
+
   configPath = process.argv[2];
   if (('-v' === configPath || '-version' === configPath || '--version' === configPath)) {
     console.log("EventTracker version " + (VERSION));
@@ -123,8 +122,9 @@ var generate_mongo_url = function(obj){
     process.exit(0);
   }
   config = JSON.parse(fs.readFileSync(configPath).toString());
-//  pixel = fs.readFileSync('pixel.gif');
+  //  pixel = fs.readFileSync('pixel.gif');
   pixel = "R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
+
   pixelHeaders = {
     'Cache-Control': 'private, no-cache, proxy-revalidate',
     'Content-Type': 'image/gif',
@@ -222,4 +222,6 @@ mongo.connect(mongourl, {}, function(error, db1) {
 	console.log(cmnfs.toBase64ToStr(base64));
 */
 
+
 })();
+
