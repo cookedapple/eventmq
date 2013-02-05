@@ -12,18 +12,22 @@
   Db = mongo.Db;
   var db;
 
-var generate_mongo_url = function(obj){
-  obj.hostname = (obj.mongohost || 'ds037637.mongolab.com');
-  obj.port = (obj.mongoport || 37637);
-  obj.db = (obj.mongodb || 'evetmq');
+  var config = {
+    
+  }
 
-  if(obj.mongouser && obj.mongopwd) {
-    return "mongodb://" + obj.mongouser + ":" + obj.mongopwd + "@" + obj.mongohost+ ":" + obj.mongoport + "/" + obj.mongodb;
+  var generate_mongo_url = function(obj){
+    obj.hostname = (obj.mongohost || 'ds037637.mongolab.com');
+    obj.port = (obj.mongoport || 37637);
+    obj.db = (obj.mongodb || 'evetmq');
+
+    if(obj.mongouser && obj.mongopwd) {
+      return "mongodb://" + obj.mongouser + ":" + obj.mongopwd + "@" + obj.mongohost+ ":" + obj.mongoport + "/" + obj.mongodb;
+    }
+    else{
+      return "mongodb://" + obj.mongohost + ":" + obj.mongoport + "/" + obj.mongodb;
+    }
   }
-  else{
-    return "mongodb://" + obj.mongohost + ":" + obj.mongoport + "/" + obj.mongodb;
-  }
-}
 
   VERSION = '0.1.0';
   store = [];
@@ -37,6 +41,7 @@ var generate_mongo_url = function(obj){
     //	console.info(JSON.stringify(store));
     return store.push({key: keyname});
   };
+
   serialize = function() {
     var data;
     data = {
@@ -48,6 +53,7 @@ var generate_mongo_url = function(obj){
     }
     return querystring.stringify(data);
   };
+
   flush = function() {
     var data, request;
     log(store);
@@ -64,6 +70,7 @@ var generate_mongo_url = function(obj){
       return console.info('--- flushed ---');
     });
   };
+
   log = function(hash) {
     var _a, _b, hits, key;
     _a = []; _b = hash;
@@ -98,9 +105,9 @@ var generate_mongo_url = function(obj){
   		requrl = cmnfs.encodeUrl('+','%2B',requrl);
   		//requrl = cmnfs.encodeUrl(requrl);
   	}
-	//console.info(requrl);
+
     params = url.parse(requrl, true);
-	//console.info(params);
+
     if (params.pathname === '/pixel.gif') {
       res.writeHead(200, pixelHeaders);
       res.end(pixel);
@@ -153,6 +160,7 @@ var generate_mongo_url = function(obj){
   process.on('uncaughtException', function(err) {
     return console.error("Uncaught Exception: " + (err));
   });
+  
   var port = process.env.PORT || config.port;
   server.listen(port, function(){console.log("Node server listening on " + port);});
   setInterval(flush, config.interval * 1000);
